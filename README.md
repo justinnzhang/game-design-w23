@@ -8,7 +8,7 @@ Made by Justin Zhang, jzha365
 * React (TypeScript)
 * Next.js
 
-### JS Librarys
+### JS Libraries
 * Chakra-UI (Styling & Components)
 * Framer Motion (Animation)
 
