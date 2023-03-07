@@ -32,7 +32,7 @@ export const WelcomeModal = () => {
               day become larger than Starbucks.
             </Text>
             <Text>
-              You begin your joueny with a single coffee maker and a big vision
+              You begin your journey with a single coffee maker and a big vision
               for the future.
             </Text>
           </Stack>

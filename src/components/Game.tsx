@@ -291,7 +291,7 @@ export const Game = () => {
                     </Stack>
                     <Stack spacing={0}>
                       <Text color='gray.500'>
-                        Gross Earnings: $
+                        Gross Earnings:
                         {Intl.NumberFormat('en-US', {
                           style: 'currency',
                           currency: 'USD',
