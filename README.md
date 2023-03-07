@@ -1,7 +1,13 @@
 # For Game Design, CS 4483
-Hosted game found [here](https://game-design-w23.vercel.app)
+> This is the same content found within the Readme.pdf in the root folder!
 
-Made by Justin Zhang, jzha365
+
+Hosted game found [here](https://game-design-w23.vercel.app) and GitHub repository found [here](https://github.com/justinnzhang/game-design-w23)
+
+## How to run
+> You can find the game running and deployed at https://game-design-w23.vercel.app.
+### Pre-requisites
+1. Have node and npm installed on your machine
 
 ## Tech Stack
 ### Frameworks
