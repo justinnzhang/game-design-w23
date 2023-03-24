@@ -1,4 +1,6 @@
-# For Game Design, CS 4483
+> Created for CS4483 Game Design for Western University
+
+# Introduction
 > This is the same content found within readme.pdf in submission folder!
 
 * Hosted game here: https://game-design-w23.vercel.app
