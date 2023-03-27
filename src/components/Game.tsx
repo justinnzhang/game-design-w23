@@ -19,6 +19,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 import { Upgrade, UpgradeProps } from './Upgrade';
 import { CheckpointDisplay } from './CheckpointDisplay';
@@ -52,6 +53,7 @@ export interface SavedDataProps {
   upgradesList: UpgradeProps[];
   costsList: CostProps[];
   id: number;
+  isSavedGame: boolean;
 }
 export interface Props {
   savedData: SavedDataProps;
@@ -303,7 +305,7 @@ export const Game = ({ savedData }: Props) => {
 
   return (
     <>
-      <WelcomeModal />
+      <WelcomeModal isSavedGame={savedData.isSavedGame} />
       <Box bgGradient='linear(to-t, blue.50, blue.100)'>
         <Container maxW='container.xl' position='relative'>
           <Grid
@@ -325,6 +327,11 @@ export const Game = ({ savedData }: Props) => {
               >
                 <Stack {...CARD_STYLE_PROPS}>
                   <Heading color='blue.200'>Coffee.io</Heading>
+                  <Stack direction='row'>
+                    <Button as={Link} href='/'>
+                      Back Home
+                    </Button>
+                  </Stack>
                 </Stack>
                 <Stack {...CARD_STYLE_PROPS} position='relative'>
                   <Text fontSize='sm' fontWeight='bold' color='blue.200'>
