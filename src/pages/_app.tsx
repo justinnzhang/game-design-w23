@@ -6,7 +6,7 @@ import type { AppProps } from 'next/app';
 
 export default function App({ Component, pageProps }: AppProps) {
   // Create a new supabase browser client on every first render.
-  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+  const supabaseClient = createBrowserSupabaseClient();
 
   return (
     <SessionContextProvider
