@@ -6,12 +6,7 @@ import { ScreenTooSmall, Game, AuthWrapper } from '../components';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { SavedDataProps } from '../components/Game';
 
-import {
-  MOCK_UPGRADE_LIST_DATA,
-  MOCK_CHECKPOINTS_DATA,
-  MOCK_COST_DATA,
-} from '../constants';
-import { UpgradeProps } from '@/components/Upgrade';
+import { MOCK_UPGRADE_LIST_DATA, MOCK_COST_DATA } from '../constants';
 
 export default function GamePage() {
   const supabase = useSupabaseClient();
@@ -29,6 +24,8 @@ export default function GamePage() {
     } = await supabase.auth.getUser();
 
     if (!user) {
+      console.log('[DEBUG] No user found,');
+      setIsLoading(false);
       return;
     }
 
@@ -57,6 +54,7 @@ export default function GamePage() {
       upgradesList: formatUpgradeData(typedSaveData.saved_upgrade_counts),
       costsList: formatCostsData(typedSaveData.saved_costs_data),
       id: typedSaveData.id,
+      isSavedGame: !!typedSaveData.saved_upgrade_counts,
     };
 
     console.log('[DEBUG] Formatted save data', gameState);

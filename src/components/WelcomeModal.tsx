@@ -13,8 +13,12 @@ import {
   Image,
 } from '@chakra-ui/react';
 
-export const WelcomeModal = () => {
-  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+interface Props {
+  isSavedGame: boolean;
+}
+
+export const WelcomeModal = ({ isSavedGame }: Props) => {
+  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: !isSavedGame });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size='lg'>
