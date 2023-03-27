@@ -20,21 +20,16 @@ import {
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
-import { Upgrade } from './Upgrade';
+import { Upgrade, UpgradeProps } from './Upgrade';
 import { CheckpointDisplay } from './CheckpointDisplay';
 import { WelcomeModal } from './WelcomeModal';
-import { Cost } from './Cost';
+import { Cost, CostProps } from './Cost';
 
-import {
-  MOCK_UPGRADE_LIST_DATA,
-  MOCK_CHECKPOINTS_DATA,
-  MOCK_COST_DATA,
-} from '../constants';
+import { MOCK_CHECKPOINTS_DATA } from '../constants';
 
 import { CARD_STYLE_PROPS } from '@/constants/styling';
 import { parentVariants, childVariants } from '@/animation';
-
-const DEFAULT_EXPENSES_PERCENTAGE = 0.7;
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 export interface HandlePurchaseOfUpgradeProps {
   costOfUpgrade: number;
@@ -49,17 +44,35 @@ export interface HandlePurchaseOfCostProps {
   itemId: number;
 }
 
-export const Game = () => {
-  const [balance, setBalance] = useState(1);
-  const [increment, setIncrement] = useState<number>(1);
-  const [expenses, setExpenses] = useState(DEFAULT_EXPENSES_PERCENTAGE);
+export interface SavedDataProps {
+  balance: number;
+  increment: number;
+  expenses: number;
+  checkpoint: number;
+  upgradesList: UpgradeProps[];
+  costsList: CostProps[];
+  id: number;
+}
+export interface Props {
+  savedData: SavedDataProps;
+}
+
+export const Game = ({ savedData }: Props) => {
+  const supabase = useSupabaseClient();
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date>(new Date());
+
+  const [balance, setBalance] = useState(savedData.balance);
+  const [increment, setIncrement] = useState<number>(savedData.increment);
+  const [expenses, setExpenses] = useState(savedData.expenses);
   const [tickProgress, setTickProgress] = useState(0);
   const [showEarnedAmount, setShowEarnedAmount] = useState<boolean>(false);
 
   const [checkpointProgress, setCheckpointProgress] = useState(0);
 
-  const [upgradesList, setUpgradesList] = useState(MOCK_UPGRADE_LIST_DATA);
-  const [costsList, setCostsList] = useState(MOCK_COST_DATA);
+  const [upgradesList, setUpgradesList] = useState(savedData.upgradesList);
+  const [costsList, setCostsList] = useState(savedData.costsList);
 
   const [isFasterTick, setIsFasterTick] = useState(false);
 
@@ -105,6 +118,57 @@ export const Game = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showEarnedAmount]);
 
+  async function handleSave() {
+    setIsSaving(true);
+
+    const dataToSave: DBSaveDataPartial = {
+      balance,
+      increment,
+      expenses,
+      checkpoint: checkpointProgress,
+      saved_upgrade_counts: fetchUpgradesForDB(),
+      saved_costs_data: fetchCostsForDB(),
+    };
+
+    const { error } = await supabase
+      .from('Save Data')
+      .update(dataToSave)
+      .eq('id', savedData.id);
+
+    if (error) {
+      console.log('Error saving data: ', error);
+
+      toast({
+        title: 'Error',
+        description: 'There was an error saving your data',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+    } else {
+      toast({
+        title: 'Saved',
+        description: 'Your data has been saved',
+        status: 'success',
+        duration: 1000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+      setLastSaved(new Date());
+    }
+
+    setIsSaving(false);
+  }
+
+  function fetchUpgradesForDB() {
+    return upgradesList.map((upgrade) => upgrade.numberOfUpgrades);
+  }
+
+  function fetchCostsForDB() {
+    return costsList.map((cost) => cost.purchased);
+  }
+
   function handleTick() {
     setBalance((prev) => {
       setShowEarnedAmount(true);
@@ -112,7 +176,7 @@ export const Game = () => {
       const newBalance = prev + increment * (1 - expenses);
 
       if (
-        checkpointProgress < 5 &&
+        checkpointProgress < MOCK_CHECKPOINTS_DATA.length + 1 &&
         newBalance >= MOCK_CHECKPOINTS_DATA[checkpointProgress].earningThreshold
       ) {
         setCheckpointProgress((prevCheckpoint) => prevCheckpoint + 1);
@@ -260,12 +324,7 @@ export const Game = () => {
                 overflow='auto'
               >
                 <Stack {...CARD_STYLE_PROPS}>
-                  <Wrap direction='row' alignContent='center'>
-                    <Heading color='blue.200'>Coffee.io</Heading>
-                    <Badge h='fit-content' colorScheme='blue'>
-                      Prototype
-                    </Badge>
-                  </Wrap>
+                  <Heading color='blue.200'>Coffee.io</Heading>
                 </Stack>
                 <Stack {...CARD_STYLE_PROPS} position='relative'>
                   <Text fontSize='sm' fontWeight='bold' color='blue.200'>
@@ -318,12 +377,23 @@ export const Game = () => {
                 </Stack>
                 <CheckpointDisplay
                   checkpoint={
-                    checkpointProgress < 4
+                    checkpointProgress < MOCK_CHECKPOINTS_DATA.length
                       ? MOCK_CHECKPOINTS_DATA[checkpointProgress]
                       : false
                   }
                   currentBalance={balance}
                 />
+                <Stack {...CARD_STYLE_PROPS}>
+                  <Text color='gray.100'>
+                    Last saved:{' '}
+                    {new Intl.DateTimeFormat('en-US', {
+                      timeStyle: 'long',
+                    }).format(lastSaved)}
+                  </Text>
+                  <Button onClick={handleSave} isLoading={isSaving}>
+                    Save Progress
+                  </Button>
+                </Stack>
                 <Stack
                   px={8}
                   py={6}
