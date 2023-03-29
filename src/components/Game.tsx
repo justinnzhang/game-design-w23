@@ -328,7 +328,7 @@ export const Game = ({ savedData }: Props) => {
                 <Stack {...CARD_STYLE_PROPS}>
                   <Heading color='blue.200'>Coffee.io</Heading>
                   <Stack direction='row'>
-                    <Button as={Link} href='/'>
+                    <Button as={Link} href='/home'>
                       Back Home
                     </Button>
                   </Stack>

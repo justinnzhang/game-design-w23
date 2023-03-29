@@ -1,8 +1,19 @@
-import { Box, Center, Container, Heading, Stack, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Container,
+  Heading,
+  Stack,
+  Text,
+  Button,
+} from '@chakra-ui/react';
+import Link from 'next/link';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
+
+import { IoArrowBack } from 'react-icons/io5';
 
 interface Props {
   children: React.ReactNode;
@@ -29,6 +40,15 @@ export const AuthWrapper = ({ children }: Props) => {
               borderColor='gray.200'
               borderWidth='1px'
             >
+              <Button
+                as={Link}
+                href='/'
+                variant='ghost'
+                w='fit-content'
+                leftIcon={<IoArrowBack />}
+              >
+                Back
+              </Button>
               <Heading size='xl' color='blue.500'>
                 Coffee.io
               </Heading>

@@ -1,141 +1,28 @@
 import Head from 'next/head';
 import {
-  useBreakpointValue,
   Button,
   Box,
-  Center,
-  Skeleton,
   Container,
   Stack,
   Text,
   Heading,
+  Flex,
+  Spacer,
+  Grid,
+  GridItem,
+  SimpleGrid,
+  Image,
+  Divider,
+  Center,
+  Link as ChakraLink,
 } from '@chakra-ui/react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
-import { ScreenTooSmall, AuthWrapper } from '../components';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { IoArrowForward, IoLink } from 'react-icons/io5';
 
-export default function HomePage() {
-  const supabase = useSupabaseClient();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaveData, setIsSaveData] = useState(false);
+import { CONTRIBUTORS_LIST, TECH_STACK_LIST } from '../constants';
 
-  const [balance, setBalance] = useState(0);
-
-  const isMobile = useBreakpointValue({
-    base: true,
-    sm: false,
-    xs: true,
-  });
-
-  useEffect(() => {
-    handleUserDataFetch();
-  }, []);
-
-  // Fetches the new user's data from the database
-  async function handleUserDataFetch() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      console.log('[DEBUG] No user found,');
-      setIsLoading(false);
-
-      return;
-    }
-
-    const { data: saveData, error } = await supabase
-      .from('Save Data')
-      .select()
-      .match({ user_id: user.id });
-
-    if (error || !saveData.length) {
-      console.error('User not found, creating new user', error);
-
-      const { data, error: insertError } = await supabase
-        .from('Save Data')
-        .insert({
-          user_id: user.id,
-        });
-
-      console.log('New user created', data, insertError);
-    } else {
-      console.log('Save data found', saveData);
-      setBalance(saveData[0].balance);
-
-      if (saveData[0].saved_upgrade_counts) {
-        setIsSaveData(true);
-      }
-    }
-
-    setIsLoading(false);
-  }
-
-  async function signOut() {
-    await supabase.auth.signOut();
-  }
-
-  if (isMobile) {
-    return <ScreenTooSmall />;
-  }
-
-  if (isLoading) {
-    return (
-      <Box
-        w='100vw'
-        h='100vh'
-        bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, blue.100 50%)'
-      >
-        <Container maxW='container.sm' h='$100vh'>
-          <Center h='100%'>
-            <Stack
-              w='100%'
-              bg='white'
-              p={8}
-              borderRadius='xl'
-              borderColor='gray.200'
-              borderWidth='1px'
-              spacing={8}
-            >
-              <Stack>
-                <Skeleton height='2rem' maxW='20rem' />
-                <Skeleton height='1rem' maxW='30rem' />
-              </Stack>
-              <Stack>
-                <Skeleton height='1.5rem' />
-                <Skeleton height='1.5rem' />
-                <Skeleton height='1.5rem' />
-                <Skeleton height='1.5rem' />
-                <Skeleton height='1.5rem' />
-                <Skeleton height='1.5rem' />
-              </Stack>
-              <Stack alignItems='center' w='100%'>
-                <Skeleton height='2rem' w='50%' />
-                <Skeleton height='2rem' w='50%' />
-              </Stack>
-            </Stack>
-          </Center>
-        </Container>
-      </Box>
-    );
-  }
-
-  const savedProgressMarkup = isSaveData ? (
-    <Stack p={4} border='1px solid' borderColor='gray.100' borderRadius='lg'>
-      <Text fontWeight='medium' fontSize='sm' color='gray.400'>
-        Your Balance
-      </Text>
-      <Text noOfLines={1} fontSize='lg'>
-        {Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(balance)}
-      </Text>
-    </Stack>
-  ) : null;
-
+export default function IndexPage() {
   return (
     <>
       <Head>
@@ -147,40 +34,170 @@ export default function HomePage() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <AuthWrapper>
-        <Box
-          w='100vw'
-          h='100vh'
-          bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, blue.100 50%)'
+      <Box
+        w='100vw'
+        h='100vh'
+        bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, blue.100 50%)'
+      >
+        <Container
+          maxW='container.lg'
+          h='$100vh'
+          p={0}
+          bg='white'
+          position='relative'
+          overflowY='scroll'
         >
-          <Container maxW='container.sm' h='$100vh'>
-            <Center h='100%'>
-              <Stack
-                w='100%'
-                bg='white'
-                p={8}
-                borderRadius='xl'
-                borderColor='gray.200'
-                borderWidth='1px'
-                spacing={8}
+          <Box
+            p={4}
+            bg='blue.100'
+            as={Flex}
+            alignItems='center'
+            id='heading'
+            position='-webkit-sticky'
+          >
+            <Text fontWeight='medium' fontSize='sm' color='blue.800'>
+              Coffee.io
+            </Text>
+            <Spacer />
+            <Button as={Link} href='/home' colorScheme='blue' size='sm'>
+              Play
+            </Button>
+          </Box>
+          <Stack>
+            <Flex p={8} alignItems='center'>
+              <Heading
+                size='2xl'
+                bgGradient='linear(to-br, blue.100, blue.400, blue.500)'
+                bgClip='text'
               >
-                <Heading size='xl' color='blue.500'>
-                  Coffee.io
-                </Heading>
-                {savedProgressMarkup}
-                <Stack w='100%'>
-                  <Button as={Link} href='/game' colorScheme='green'>
-                    {isSaveData ? 'Continue Saved Game' : 'Start New Game'}
-                  </Button>
-                  <Button onClick={signOut} variant='ghost' colorScheme='red'>
-                    Sign Out
-                  </Button>
-                </Stack>
+                Coffee.io
+              </Heading>
+              <Spacer />
+              <Image
+                src='/static/pixel-art-coffee.avif'
+                alt='Coffee.io Logo'
+                w='3rem'
+              />
+            </Flex>
+            <SimpleGrid gap={16} p={8} columns={2} color='gray.500'>
+              <Stack spacing={8}>
+                <Text>
+                  Coffe.io - the ultimate coffee shop simulation game where you
+                  brew success one cup at a time! Immerse yourself in the
+                  bustling world of San Francisco and embark on a thrilling
+                  entrepreneurial journey to create the most innovative coffee
+                  shop in the city.
+                </Text>
+                <Button
+                  as={Link}
+                  href='/home'
+                  w='fit-content'
+                  colorScheme='blue'
+                  rightIcon={<IoArrowForward />}
+                >
+                  Play Now
+                </Button>
               </Stack>
+              <Image
+                src='/static/busy-coffee-shop.jpeg'
+                alt='Coffee Shop'
+                w='100%'
+                borderRadius='lg'
+              />
+            </SimpleGrid>
+            <SimpleGrid gap={16} p={8} columns={2} color='gray.500'>
+              <Image
+                src='/static/sf-image.png'
+                alt='Coffee Shop'
+                w='100%'
+                borderRadius='lg'
+              />
+              <Stack spacing={8}>
+                <Text>
+                  Start from scratch and build your coffee empire from the
+                  ground up. Master the art of crafting the perfect cup, attract
+                  customers with your unique blends, and watch your profits
+                  soar. But that&apos;s just the beginning! As you progress,
+                  unlock cutting-edge technology to revolutionize your coffee
+                  shop with robots and AI. Streamline your operations, enhance
+                  customer experience, and redefine the future of the coffee
+                  industry.
+                </Text>
+                <Button
+                  as={Link}
+                  href='/home'
+                  w='fit-content'
+                  colorScheme='blue'
+                  rightIcon={<IoArrowForward />}
+                >
+                  Play Now
+                </Button>
+              </Stack>
+            </SimpleGrid>
+            <Divider />
+            <Center alignItems='center' w='100%' p={2}>
+              <Heading size='lg'>Credits</Heading>
             </Center>
-          </Container>
-        </Box>
-      </AuthWrapper>
+            <Grid
+              templateColumns='repeat(12, 1fr)'
+              gap={16}
+              p={8}
+              color='gray.500'
+            >
+              <Stack spacing={2} as={GridItem} colSpan={4}>
+                <Text fontWeight='bold' fontSize='lg' color='blue.500'>
+                  The Team
+                </Text>
+                {CONTRIBUTORS_LIST.map((contributor) => (
+                  <Text key={contributor}>{contributor}</Text>
+                ))}
+              </Stack>
+              <Stack as={GridItem} colSpan={8}>
+                <Text fontWeight='bold' fontSize='lg' color='blue.500'>
+                  Tech Stack
+                </Text>
+                {TECH_STACK_LIST.map((tech, index) => (
+                  <Stack
+                    key={index}
+                    direction='row'
+                    alignItems='center'
+                    bg='blue.50'
+                    borderRadius='xl'
+                    p={4}
+                    spacing={4}
+                  >
+                    <Center w='4rem' h='4rem' bg='white' borderRadius='lg'>
+                      <Image src={tech.logoKey} alt={tech.name} w='2rem' />
+                    </Center>
+                    <Stack spacing={1}>
+                      <Stack
+                        direction='row'
+                        alignItems='center'
+                        fontWeight='medium'
+                        color='blue.400'
+                      >
+                        <ChakraLink href={tech.link} isExternal>
+                          {tech.name}
+                        </ChakraLink>
+                        <IoLink />
+                      </Stack>
+                      <Text key={index}>{tech.description}</Text>
+                    </Stack>
+                  </Stack>
+                ))}
+              </Stack>
+            </Grid>
+          </Stack>
+          <Box p={8} bg='blue.50' w='100%'>
+            <Text color='purple.500' fontWeight='medium'>
+              Made with ❤️ at Western University
+            </Text>
+            <Text color='gray.500' fontSize='sm'>
+              For CS4483 W23, ©️ 2023
+            </Text>
+          </Box>
+        </Container>
+      </Box>
     </>
   );
 }

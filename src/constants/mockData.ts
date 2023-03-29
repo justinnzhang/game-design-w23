@@ -197,3 +197,61 @@ export const MOCK_COST_DATA: CostProps[] = [
     purchased: false,
   },
 ];
+
+export const CONTRIBUTORS_LIST: string[] = [
+  'Justin Zhang',
+  'Matthew Danics',
+  'Victoria Lu',
+  'Wendy Li',
+  'Raahim Salman',
+];
+
+export const TECH_STACK_LIST: {
+  name: string;
+  link: string;
+  description: string;
+  logoKey: string;
+}[] = [
+  {
+    name: 'React',
+    link: 'https://react.dev/',
+    description: 'Frontend Framework',
+    logoKey: '/static/logos/react-logo.png',
+  },
+  {
+    name: 'Next.js',
+    link: 'https://nextjs.org/',
+    description: 'Meta-Framework for Server Side Rendering',
+    logoKey: '/static/logos/nextjs.png',
+  },
+  {
+    name: 'TypeScript',
+    link: 'https://www.typescriptlang.org/',
+    description: 'Language & Typing',
+    logoKey: '/static/logos/typescript.png',
+  },
+  {
+    name: 'Framer Motion',
+    link: 'https://www.framer.com/motion/',
+    description: 'Animations',
+    logoKey: '/static/logos/framer-motion.png',
+  },
+  {
+    name: 'Chakra-UI',
+    link: 'https://chakra-ui.com/',
+    description: 'Components & Styling',
+    logoKey: '/static/logos/chakra-ui.jpeg',
+  },
+  {
+    name: 'Vercel',
+    link: 'https://vercel.com/',
+    description: 'Hosting, Analytics, & CI/CD',
+    logoKey: '/static/logos/vercel.png',
+  },
+  {
+    name: 'Supabase',
+    link: 'https://supabase.io/',
+    description: 'Database & Authentication',
+    logoKey: '/static/logos/supabase.png',
+  },
+];
