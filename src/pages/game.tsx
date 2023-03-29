@@ -1,5 +1,13 @@
 import Head from 'next/head';
-import { useBreakpointValue } from '@chakra-ui/react';
+import {
+  useBreakpointValue,
+  Box,
+  Center,
+  Spinner,
+  Text,
+  Stack,
+  Button,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 import { ScreenTooSmall, Game, AuthWrapper } from '../components';
@@ -7,6 +15,7 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { SavedDataProps } from '../components/Game';
 
 import { MOCK_UPGRADE_LIST_DATA, MOCK_COST_DATA } from '../constants';
+import Link from 'next/link';
 
 export default function GamePage() {
   const supabase = useSupabaseClient();
@@ -24,7 +33,6 @@ export default function GamePage() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      console.log('[DEBUG] No user found,');
       setIsLoading(false);
       return;
     }
@@ -35,16 +43,12 @@ export default function GamePage() {
       .match({ user_id: user.id });
 
     if (error) {
-      console.log("[DEBUG] oops, couldn't find save data", error);
-
       setIsLoading(false);
       return;
     }
 
     // Adding types the lazy way LMAO
     const typedSaveData = saveData[0] as DBSaveData;
-
-    console.log('[DEBUG] Save data found', saveData);
 
     const gameState: SavedDataProps = {
       balance: typedSaveData.balance,
@@ -57,7 +61,6 @@ export default function GamePage() {
       isSavedGame: !!typedSaveData.saved_upgrade_counts,
     };
 
-    console.log('[DEBUG] Formatted save data', gameState);
     setSavedData(gameState);
     setIsLoading(false);
   }
@@ -97,11 +100,36 @@ export default function GamePage() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box bgGradient='linear(to-t, blue.50, blue.100)' h='$100vh' w='100vw'>
+        <Center h='100%'>
+          <Stack alignItems='center' spacing={4}>
+            <Text fontWeight='bold' fontSize='xl'>
+              Loading Coffee.io
+            </Text>
+            <Spinner />
+          </Stack>
+        </Center>
+      </Box>
+    );
   }
 
   if (!savedData) {
-    return <div>Initializing Game</div>;
+    return (
+      <Box bgGradient='linear(to-t, blue.50, blue.100)' h='$100vh' w='100vw'>
+        <Center h='100%'>
+          <Stack alignItems='center' spacing={4}>
+            <Text fontWeight='bold' fontSize='xl'>
+              Inializing Game
+            </Text>
+            <Spinner />
+            <Button as={Link} href='/'>
+              Back Home
+            </Button>
+          </Stack>
+        </Center>
+      </Box>
+    );
   }
 
   return (
