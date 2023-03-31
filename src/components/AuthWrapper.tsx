@@ -6,6 +6,10 @@ import {
   Stack,
   Text,
   Button,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
@@ -49,13 +53,19 @@ export const AuthWrapper = ({ children }: Props) => {
               >
                 Back
               </Button>
-              <Heading size='xl' color='blue.500'>
+              <Alert status='info' color='blue.700'>
+                <AlertIcon />
+                Please use a personal Gmail account to sign up. Your UWO email
+                may block the verification email.
+              </Alert>
+              <Heading size='xl' color='blue.500' pt={4}>
                 Coffee.io
               </Heading>
               <Text color='gray.500'>
                 Where coffee and technology meet - the newest business
                 simulation game
               </Text>
+
               <Auth
                 supabaseClient={supabase}
                 appearance={{

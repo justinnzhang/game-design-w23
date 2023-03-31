@@ -25,6 +25,7 @@ export default function GamePage() {
 
   useEffect(() => {
     fetchSaveData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchSaveData() {
@@ -51,14 +52,14 @@ export default function GamePage() {
     const typedSaveData = saveData[0] as DBSaveData;
 
     const gameState: SavedDataProps = {
-      balance: typedSaveData.balance,
-      increment: typedSaveData.increment || 1,
-      checkpoint: typedSaveData.checkpoint || 0,
-      expenses: typedSaveData.expenses || 0,
-      upgradesList: formatUpgradeData(typedSaveData.saved_upgrade_counts),
-      costsList: formatCostsData(typedSaveData.saved_costs_data),
-      id: typedSaveData.id,
-      isSavedGame: !!typedSaveData.saved_upgrade_counts,
+      balance: typedSaveData?.balance || 0,
+      increment: typedSaveData?.increment || 1,
+      checkpoint: typedSaveData?.checkpoint || 0,
+      expenses: typedSaveData?.expenses || 0,
+      upgradesList: formatUpgradeData(typedSaveData?.saved_upgrade_counts),
+      costsList: formatCostsData(typedSaveData?.saved_costs_data),
+      id: typedSaveData?.id,
+      isSavedGame: !!typedSaveData?.saved_upgrade_counts,
     };
 
     setSavedData(gameState);
