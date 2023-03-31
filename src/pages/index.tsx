@@ -82,7 +82,7 @@ export default function IndexPage() {
             <SimpleGrid gap={16} p={8} columns={2} color='gray.500'>
               <Stack spacing={8}>
                 <Text>
-                  Coffe.io - the ultimate coffee shop simulation game where you
+                  Coffee.io - the ultimate coffee shop simulation game where you
                   brew success one cup at a time! Immerse yourself in the
                   bustling world of San Francisco and embark on a thrilling
                   entrepreneurial journey to create the most innovative coffee
