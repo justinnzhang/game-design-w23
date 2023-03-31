@@ -131,24 +131,32 @@ export const MOCK_CHECKPOINTS_DATA: CheckpointProps[] = [
     name: 'First Thousand',
     description: 'Make your first thousand dollars.',
     earningThreshold: 1000,
+    completionText:
+      'Holy coffee-moly! You made your first thousand dollars! This is a great start! Keep going! Just imagine what you can do with 10 thousand dollars!',
   },
   {
     id: 2,
     name: 'First 10 Thousand',
     description: 'Make your first 10 thousand dollars',
     earningThreshold: 10000,
+    completionText:
+      "Latte me tell you, that's a surprise! You made your first 10 thousand dollars! That's a lot of coffee sold! Imagine if you could make 100 thousand dollars!",
   },
   {
     id: 3,
     name: 'First 100 Thousand',
     description: 'Make your first 100 thousand dollars',
     earningThreshold: 100000,
+    completionText:
+      "What in the 100k of coffee is going on here?! That's almost half a ferrari. What if that ferrari was made out of coffee? Can ferrari's run on coffee? I don't know, but if you make 1 million dollars, you can find out!",
   },
   {
     id: 4,
     name: 'First Million',
     description: 'Make your first million dollars',
     earningThreshold: 1000000,
+    completionText:
+      "You made your first million dollars! You're a coffee tycoon! Starbucks are shaking in their boots! Or maybe they're just shaking because they're so caffeinated. Either way, you're a coffee tycoon!",
   },
 ];
 
