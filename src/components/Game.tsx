@@ -17,6 +17,7 @@ import {
   Tab,
   TabPanel,
   Button,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -31,6 +32,7 @@ import { MOCK_CHECKPOINTS_DATA } from '../constants';
 import { CARD_STYLE_PROPS } from '@/constants/styling';
 import { parentVariants, childVariants } from '@/animation';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { CheckpointModal } from './CheckpointModal';
 
 export interface HandlePurchaseOfUpgradeProps {
   costOfUpgrade: number;
@@ -75,6 +77,12 @@ export const Game = ({ savedData }: Props) => {
 
   const [upgradesList, setUpgradesList] = useState(savedData.upgradesList);
   const [costsList, setCostsList] = useState(savedData.costsList);
+
+  const {
+    isOpen: isCheckpointModalOpen,
+    onClose: onCheckpointModalClose,
+    onOpen: onCheckpointModalOpen,
+  } = useDisclosure({ defaultIsOpen: false });
 
   const [isFasterTick, setIsFasterTick] = useState(false);
 
@@ -193,6 +201,7 @@ export const Game = ({ savedData }: Props) => {
           MOCK_CHECKPOINTS_DATA[checkpointProgress]?.earningThreshold
       ) {
         setCheckpointProgress((prevCheckpoint) => prevCheckpoint + 1);
+        onCheckpointModalOpen();
       }
 
       return newBalance;
@@ -317,6 +326,11 @@ export const Game = ({ savedData }: Props) => {
   return (
     <>
       <WelcomeModal isSavedGame={savedData.isSavedGame} />
+      <CheckpointModal
+        isOpen={isCheckpointModalOpen}
+        onClose={onCheckpointModalClose}
+        checkpoint={MOCK_CHECKPOINTS_DATA[checkpointProgress - 1]}
+      />
       <Box bgGradient='linear(to-t, blue.50, blue.100)'>
         <Container maxW='container.xl' position='relative'>
           <Grid
