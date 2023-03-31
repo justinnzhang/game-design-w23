@@ -80,6 +80,9 @@ export const Game = ({ savedData }: Props) => {
 
   const toast = useToast();
 
+  /**
+   * Game tick handler
+   */
   useEffect(() => {
     const progressInterval = setInterval(() => {
       setTickProgress((prev) => {
@@ -120,7 +123,14 @@ export const Game = ({ savedData }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showEarnedAmount]);
 
-  async function handleSave() {
+  useEffect(() => {
+    const autoSaveInterval = setInterval(() => handleSave(true), 60000);
+
+    return () => clearInterval(autoSaveInterval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function handleSave(isAutosave = false) {
     setIsSaving(true);
 
     const dataToSave: DBSaveDataPartial = {
@@ -150,10 +160,10 @@ export const Game = ({ savedData }: Props) => {
       });
     } else {
       toast({
-        title: 'Saved',
+        title: `${isAutosave ? 'Autosaved' : 'Saved'}`,
         description: 'Your data has been saved',
-        status: 'success',
-        duration: 1000,
+        status: 'info',
+        duration: isAutosave ? 3000 : 1000,
         isClosable: true,
         position: 'bottom-right',
       });
@@ -178,8 +188,9 @@ export const Game = ({ savedData }: Props) => {
       const newBalance = prev + increment * (1 - expenses);
 
       if (
-        checkpointProgress < MOCK_CHECKPOINTS_DATA.length + 1 &&
-        newBalance >= MOCK_CHECKPOINTS_DATA[checkpointProgress].earningThreshold
+        checkpointProgress < MOCK_CHECKPOINTS_DATA.length &&
+        newBalance >=
+          MOCK_CHECKPOINTS_DATA[checkpointProgress]?.earningThreshold
       ) {
         setCheckpointProgress((prevCheckpoint) => prevCheckpoint + 1);
       }
@@ -391,13 +402,17 @@ export const Game = ({ savedData }: Props) => {
                   currentBalance={balance}
                 />
                 <Stack {...CARD_STYLE_PROPS}>
-                  <Text color='gray.100'>
+                  <Text fontSize='sm' fontWeight='bold' color='blue.200'>
+                    Autosaves every minutes
+                  </Text>
+
+                  <Text color='gray.200'>
                     Last saved:{' '}
                     {new Intl.DateTimeFormat('en-US', {
                       timeStyle: 'long',
                     }).format(lastSaved)}
                   </Text>
-                  <Button onClick={handleSave} isLoading={isSaving}>
+                  <Button onClick={() => handleSave()} isLoading={isSaving}>
                     Save Progress
                   </Button>
                 </Stack>
