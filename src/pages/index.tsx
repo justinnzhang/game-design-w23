@@ -38,11 +38,13 @@ export default function IndexPage() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Box
-        w='100vw'
+        w='100%'
         minH='100vh'
         h='fit-content'
-        bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, brand.100 50%)'
+        bgGradient='linear(to-br, blue.200 0%, purple.100 25%, brand.50 50%, brand.100 100%)'
         overflow='hidden'
+        m={0}
+        p={0}
       >
         <Container
           maxW='container.lg'

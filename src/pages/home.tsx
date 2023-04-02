@@ -21,10 +21,12 @@ import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
 
 import { ScreenTooSmall, AuthWrapper } from '../components';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
 export default function HomePage() {
+  const user = useUser();
   const supabase = useSupabaseClient();
+
   const [isLoading, setIsLoading] = useState(true);
   const [isSaveData, setIsSaveData] = useState(false);
 
@@ -166,10 +168,10 @@ export default function HomePage() {
 
   const savedProgressMarkup = isSaveData ? (
     <Stack p={4} border='1px solid' borderColor='gray.100' borderRadius='lg'>
-      <Text fontWeight='medium' fontSize='sm' color='gray.400'>
-        Your Balance
+      <Text fontWeight='bold' fontSize='sm' color='brand.400'>
+        YOUR BALANCE
       </Text>
-      <Text noOfLines={1} fontSize='lg'>
+      <Text noOfLines={1} fontSize='3xl'>
         {Intl.NumberFormat('en-US', {
           style: 'currency',
           currency: 'USD',
@@ -223,7 +225,7 @@ export default function HomePage() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <AuthWrapper>
+      <AuthWrapper user={user}>
         <Box
           w='100vw'
           h='100vh'

@@ -1,34 +1,34 @@
-import { useState, useEffect } from 'react';
 import {
-  Container,
-  Text,
-  Heading,
+  Badge,
   Box,
-  Stack,
+  Button,
+  Container,
   Grid,
   GridItem,
-  Badge,
-  Wrap,
-  useToast,
-  Tabs,
-  TabList,
-  TabPanels,
+  Heading,
+  Stack,
   Tab,
+  TabList,
   TabPanel,
-  Button,
+  TabPanels,
+  Tabs,
+  Text,
   useDisclosure,
+  useToast,
+  Wrap,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
-import { Upgrade, UpgradeProps } from './Upgrade';
 import { CheckpointDisplay } from './CheckpointDisplay';
-import { WelcomeModal } from './WelcomeModal';
 import { Cost, CostProps } from './Cost';
 import { HeadingCard } from './HeadingCard';
+import { Upgrade, UpgradeProps } from './Upgrade';
+import { WelcomeModal } from './WelcomeModal';
 
 import { MOCK_CHECKPOINTS_DATA } from '../constants';
 
-import { parentVariants, childVariants } from '@/animation';
+import { childVariants, parentVariants } from '@/animation';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { CheckpointModal } from './CheckpointModal';
 
@@ -58,6 +58,9 @@ export interface SavedDataProps {
 export interface Props {
   savedData: SavedDataProps;
 }
+
+// When the game stops doing earning-based checkpoints
+const EARNING_CHECKPOINT_MAXMIUM = 5;
 
 export const Game = ({ savedData }: Props) => {
   const supabase = useSupabaseClient();
@@ -196,9 +199,9 @@ export const Game = ({ savedData }: Props) => {
       const newBalance = prev + increment * (1 - expenses);
 
       if (
-        checkpointProgress < MOCK_CHECKPOINTS_DATA.length &&
+        checkpointProgress < EARNING_CHECKPOINT_MAXMIUM &&
         newBalance >=
-          MOCK_CHECKPOINTS_DATA[checkpointProgress]?.earningThreshold
+          MOCK_CHECKPOINTS_DATA[checkpointProgress]?.earningThreshold!!
       ) {
         setCheckpointProgress((prevCheckpoint) => prevCheckpoint + 1);
         onCheckpointModalOpen();
@@ -288,40 +291,12 @@ export const Game = ({ savedData }: Props) => {
       return newState;
     });
 
+    if (itemId >= 6 && checkpointProgress < 7) {
+      setCheckpointProgress((prevCheckpoint) => prevCheckpoint + 1);
+    }
+
     return true;
   };
-
-  const motionProps = {
-    initial: { opacity: 0, y: 0 },
-    animate: {
-      opacity: 1,
-      y: -20,
-      transition: { duration: isFasterTick ? 0.1 : 0.9, ease: 'easeOut' },
-    },
-  };
-
-  const balanceIncreaseMarkup = showEarnedAmount ? (
-    <motion.div
-      style={{
-        position: 'absolute',
-        right: 10,
-        top: 20,
-        overflow: 'visible',
-        height: '0px',
-      }}
-      variants={motionProps}
-      animate='animate'
-      initial='initial'
-    >
-      <Text fontSize='xl' fontWeight='medium' p={0} m={0} color='green.100'>
-        +{' '}
-        {Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(increment * (1 - expenses))}
-      </Text>
-    </motion.div>
-  ) : null;
 
   return (
     <>
@@ -375,7 +350,7 @@ export const Game = ({ savedData }: Props) => {
                       Testing Tools
                     </Text>
 
-                    <Badge h='fit-content' colorScheme='blue'>
+                    <Badge h='fit-content' colorScheme='brand'>
                       Testing
                     </Badge>
                   </Wrap>
@@ -385,8 +360,29 @@ export const Game = ({ savedData }: Props) => {
                     }}
                   >
                     {isFasterTick
-                      ? 'Regular Earning Speed'
-                      : '10x Earning Speed'}
+                      ? '🐌 Regular Earning Speed'
+                      : '⚡️ 10x Earning Speed'}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setBalance((prev) => prev + 1000);
+                    }}
+                  >
+                    Add $1,000
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setBalance((prev) => prev + 1000000);
+                    }}
+                  >
+                    Add $1,000,000
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setBalance((prev) => prev + 10000000);
+                    }}
+                  >
+                    Add $10,000,000
                   </Button>
                 </Stack>
               </Stack>
@@ -407,10 +403,14 @@ export const Game = ({ savedData }: Props) => {
                       <Stack>
                         <Heading>Upgrades</Heading>
                         <Text color='gray.800'>
-                          You need to spend money to make money!
+                          Increase the range of coffees you can sell to earn
+                          more!
                         </Text>
-                        {upgradesList.map((upgrade) => (
-                          <motion.div key={upgrade.id} variants={childVariants}>
+                        {upgradesList.map((upgrade, index) => (
+                          <motion.div
+                            key={`upgrades-${upgrade.id}`}
+                            variants={childVariants}
+                          >
                             <Upgrade
                               item={upgrade}
                               handlePurchase={handlePurchaseOfUpgrade}
@@ -441,14 +441,21 @@ export const Game = ({ savedData }: Props) => {
                         <Text color='gray.800'>
                           Reduce your costs to help you make more profit
                         </Text>
-                        {costsList.map((cost) => (
-                          <motion.div key={cost.id} variants={childVariants}>
-                            <Cost
-                              item={cost}
-                              handlePurchase={handlePurchaseOfCost}
-                            />
-                          </motion.div>
-                        ))}
+                        {costsList.map((cost, index) => {
+                          if (index === 6 && checkpointProgress < 6)
+                            return null;
+                          return (
+                            <motion.div
+                              key={`costs-${cost.id}`}
+                              variants={childVariants}
+                            >
+                              <Cost
+                                item={cost}
+                                handlePurchase={handlePurchaseOfCost}
+                              />
+                            </motion.div>
+                          );
+                        })}
                       </Stack>
                     </motion.div>
                   </TabPanel>

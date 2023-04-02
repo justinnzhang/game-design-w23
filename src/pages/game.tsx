@@ -11,13 +11,14 @@ import {
 import { useEffect, useState } from 'react';
 
 import { ScreenTooSmall, Game, AuthWrapper } from '../components';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import { SavedDataProps } from '../components/Game';
 
 import { MOCK_UPGRADE_LIST_DATA, MOCK_COST_DATA } from '../constants';
 import Link from 'next/link';
 
 export default function GamePage() {
+  const user = useUser();
   const supabase = useSupabaseClient();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -26,13 +27,9 @@ export default function GamePage() {
   useEffect(() => {
     fetchSaveData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   async function fetchSaveData() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
     if (!user) {
       setIsLoading(false);
       return;
@@ -144,7 +141,7 @@ export default function GamePage() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <AuthWrapper>
+      <AuthWrapper user={user}>
         <Game savedData={savedData} />
       </AuthWrapper>
     </>

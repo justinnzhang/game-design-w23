@@ -163,7 +163,7 @@ export const MOCK_CHECKPOINTS_DATA: CheckpointProps[] = [
     description: 'Make your first 100 thousand dollars',
     earningThreshold: 100000,
     completionText:
-      "What in the 100k of coffee is going on here?! That's almost half a ferrari. What if that ferrari was made out of coffee? Can ferrari's run on coffee? I don't know, but if you make 1 million dollars, you can find out!",
+      "What in the 100k of coffee is going on here?! That's almost half a Ferrari. What if that Ferrari was made out of coffee? Can Ferrari's run on coffee? As you look around your store, you start to itch for more technology. Should you start some automation?",
   },
   {
     id: 4,
@@ -171,7 +171,29 @@ export const MOCK_CHECKPOINTS_DATA: CheckpointProps[] = [
     description: 'Make your first million dollars',
     earningThreshold: 1000000,
     completionText:
-      "You made your first million dollars! You're a coffee tycoon! Starbucks are shaking in their boots! Or maybe they're just shaking because they're so caffeinated. Either way, you're a coffee tycoon!",
+      "You made your first million dollars! You're a coffee tycoon! Starbucks are shaking in their boots! Or maybe they're just shaking because they're so caffeinated. Either way, you're a coffee tycoon! You make up your mind; it's time to use your tech experience!",
+  },
+  {
+    id: 4,
+    name: 'First Million',
+    description: 'Make your first million dollars',
+    earningThreshold: 1000000,
+    completionText:
+      "You made your first million dollars! You're a coffee tycoon! Starbucks are shaking in their boots! Or maybe they're just shaking because they're so caffeinated. Either way, you're a coffee tycoon! You make up your mind; it's time to use your tech experience!",
+  },
+  {
+    id: 5,
+    name: 'Automate Your Cashiers',
+    description: 'Purchase the cost of "Automate Cashiers"',
+    completionText:
+      "You made your first million dollars! You're a coffee tycoon! Starbucks are shaking in their boots! Or maybe they're just shaking because they're so caffeinated. Either way, you're a coffee tycoon! You make up your mind; it's time to use your tech experience!",
+  },
+  {
+    id: 5,
+    name: 'Automate Yourself',
+    description: 'Purchase the cost of "Automate Yourself"',
+    completionText:
+      "You made your first million dollars! You're a coffee tycoon! Starbucks are shaking in their boots! Or maybe they're just shaking because they're so caffeinated. Either way, you're a coffee tycoon! You make up your mind; it's time to use your tech experience!",
   },
 ];
 
@@ -217,6 +239,13 @@ export const MOCK_COST_DATA: CostProps[] = [
     name: 'Automate Cashiers',
     description: 'Automate cashiers to reduce labor costs',
     costOfUpgrade: 1000000,
+    purchased: false,
+  },
+  {
+    id: 7,
+    name: 'Automate Yourself',
+    description: 'Replace yourself with artificial intelligence',
+    costOfUpgrade: 100000000,
     purchased: false,
   },
 ];

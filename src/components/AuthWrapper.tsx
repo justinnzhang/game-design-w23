@@ -11,7 +11,7 @@ import {
   useToken,
 } from '@chakra-ui/react';
 import Link from 'next/link';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { User, useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
@@ -20,10 +20,10 @@ import { IoArrowBack } from 'react-icons/io5';
 
 interface Props {
   children: React.ReactNode;
+  user: User | null;
 }
 
-export const AuthWrapper = ({ children }: Props) => {
-  const user = useUser();
+export const AuthWrapper = ({ children, user }: Props) => {
   const supabase = useSupabaseClient();
 
   const [brown100, brown200, brown300, brown400, brown500, brown600] = useToken(
