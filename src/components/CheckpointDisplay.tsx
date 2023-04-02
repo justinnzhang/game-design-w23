@@ -5,7 +5,7 @@ export interface CheckpointProps {
   id: number;
   name: string;
   description: string;
-  earningThreshold: number;
+  earningThreshold?: number;
   completionText: string;
 }
 
@@ -28,6 +28,23 @@ export const CheckpointDisplay = ({ checkpoint, currentBalance }: Props) => {
 
   const { name, description, earningThreshold } = checkpoint;
 
+  const progressBarMarkup = earningThreshold ? (
+    <Stack spacing={2}>
+      <Text color='gray.100'>
+        Goal Progress{' '}
+        <chakra.span color='gray.400'>
+          {((currentBalance / earningThreshold) * 100).toFixed(2)}%
+        </chakra.span>
+      </Text>
+      <Progress
+        value={(currentBalance / earningThreshold) * 100}
+        size='xs'
+        w='100%'
+        colorScheme='green'
+      />
+    </Stack>
+  ) : null;
+
   return (
     <>
       <Stack bg='brand.900' p={4} borderRadius={8} spacing={2}>
@@ -40,20 +57,7 @@ export const CheckpointDisplay = ({ checkpoint, currentBalance }: Props) => {
           </Text>
           <Text color='brand.200'>{description}</Text>
         </Stack>
-        <Stack spacing={2}>
-          <Text color='gray.100'>
-            Goal Progress{' '}
-            <chakra.span color='gray.400'>
-              {((currentBalance / earningThreshold) * 100).toFixed(2)}%
-            </chakra.span>
-          </Text>
-          <Progress
-            value={(currentBalance / earningThreshold) * 100}
-            size='xs'
-            w='100%'
-            colorScheme='green'
-          />
-        </Stack>
+        {progressBarMarkup}
       </Stack>
     </>
   );
