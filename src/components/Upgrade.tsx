@@ -1,5 +1,16 @@
-import { useState } from 'react';
-import { Grid, GridItem, Text, Button, Stack, Wrap } from '@chakra-ui/react';
+import {
+  Image,
+  Center,
+  Flex,
+  Spacer,
+  Grid,
+  GridItem,
+  Text,
+  Button,
+  Stack,
+  Wrap,
+  chakra,
+} from '@chakra-ui/react';
 
 import { HandlePurchaseOfUpgradeProps } from './Game';
 
@@ -12,6 +23,7 @@ export interface UpgradeProps {
   description: string;
   numberOfUpgrades: number;
   increaseInEarnings: number;
+  imageUrl: string;
 }
 
 interface Props {
@@ -32,6 +44,7 @@ export const Upgrade = ({ item, handlePurchase }: Props) => {
     description,
     numberOfUpgrades,
     increaseInEarnings,
+    imageUrl,
   } = item;
 
   function purchaseHandler() {
@@ -47,51 +60,43 @@ export const Upgrade = ({ item, handlePurchase }: Props) => {
   }
 
   return (
-    <Grid
-      templateColumns='repeat(12, 1fr)'
-      gap={4}
-      p={4}
-      bg='blue.800'
-      borderRadius={8}
-      overflow='hidden'
-    >
-      <GridItem colSpan={[4, 4, 3]}>
-        <Stack spacing={3}>
-          <Stack spacing={0}>
-            <Text fontWeight='bold' color='blue.50'>
-              {name}
-            </Text>
-            <Text color='blue.200'>
-              Cost:{' '}
+    <Flex bg='brand.800' borderRadius={16} p={4} gap={4}>
+      <Center bg='brand.500' borderRadius={12} padding={6} w='8rem' h='8rem'>
+        <Image src={imageUrl} alt={name} />
+      </Center>
+      <Stack spacing={4}>
+        <Stack spacing={0}>
+          <Text fontWeight='bold' color='brand.100' fontSize='xl'>
+            {name}
+          </Text>
+          <Text color='brand.500' fontWeight='medium'>
+            Owning{' '}
+            <chakra.span color='brand.100'>{numberOfUpgrades}</chakra.span>,
+            making{' '}
+            <chakra.span color='brand.100'>
               {Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
-              }).format(costOfUpgrade)}
-            </Text>
-          </Stack>
-          <Button onClick={purchaseHandler} size='sm' w='fit-content'>
+              }).format(
+                (numberOfUpgrades * increaseInEarnings) / earningsPerMinute
+              )}
+              /min
+            </chakra.span>
+          </Text>
+        </Stack>
+        <Stack direction='row' spacing={4}>
+          <Button onClick={purchaseHandler} colorScheme='brand'>
             Buy 1
           </Button>
         </Stack>
-      </GridItem>
-      <GridItem colSpan={[8, 8, 9]}>
-        <Wrap>
-          <Text color='blue.100' fontSize='sm' fontWeight='bold'>
-            Making{' '}
-            {Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(
-              (numberOfUpgrades * increaseInEarnings) / earningsPerMinute
-            )}
-            /min
-          </Text>
-          <Text color='blue.100' fontSize='sm'>
-            | {numberOfUpgrades} owned
-          </Text>
-        </Wrap>
-        <Text color='blue.50'>{description}</Text>
-      </GridItem>
-    </Grid>
+      </Stack>
+      <Spacer />
+      <Text color='brand.200' fontSize='xl'>
+        {Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(costOfUpgrade)}
+      </Text>
+    </Flex>
   );
 };

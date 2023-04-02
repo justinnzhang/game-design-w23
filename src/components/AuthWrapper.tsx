@@ -8,8 +8,7 @@ import {
   Button,
   Alert,
   AlertIcon,
-  AlertTitle,
-  AlertDescription,
+  useToken,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
@@ -27,12 +26,46 @@ export const AuthWrapper = ({ children }: Props) => {
   const user = useUser();
   const supabase = useSupabaseClient();
 
+  const [brown100, brown200, brown300, brown400, brown500, brown600] = useToken(
+    'colors',
+    [
+      'brand.100',
+      'brand.200',
+      'brand.300',
+      'brand.400',
+      'brand.500',
+      'brand.600',
+    ]
+  );
+
+  const customizeBrandColors = {
+    brand: brown500,
+    brandAccent: brown300,
+    brandButtonText: 'white',
+    defaultButtonBackground: 'white',
+    defaultButtonBackgroundHover: '#eaeaea',
+    defaultButtonBorder: 'lightgray',
+    defaultButtonText: 'gray',
+    dividerBackground: '#eaeaea',
+    inputBackground: 'transparent',
+    inputBorder: 'lightgray',
+    inputBorderHover: 'gray',
+    inputBorderFocus: 'gray',
+    inputText: 'black',
+    inputLabelText: 'gray',
+    inputPlaceholder: 'darkgray',
+    messageText: 'gray',
+    messageTextDanger: 'red',
+    anchorTextColor: 'gray',
+    anchorTextHoverColor: 'darkgray',
+  };
+
   if (!user) {
     return (
       <Box
         w='100vw'
         h='100vh'
-        bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, blue.100 50%)'
+        bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, brand.100 50%)'
       >
         <Container maxW='container.sm' h='$100vh'>
           <Center h='100%'>
@@ -53,12 +86,12 @@ export const AuthWrapper = ({ children }: Props) => {
               >
                 Back
               </Button>
-              <Alert status='info' color='blue.700'>
+              <Alert colorScheme='brand' color='brand.700'>
                 <AlertIcon />
                 Please use a personal Gmail account to sign up. Your UWO email
                 may block the verification email.
               </Alert>
-              <Heading size='xl' color='blue.500' pt={4}>
+              <Heading size='xl' color='brand.500' pt={4}>
                 Coffee.io
               </Heading>
               <Text color='gray.500'>
@@ -73,7 +106,7 @@ export const AuthWrapper = ({ children }: Props) => {
                   variables: {
                     default: {
                       colors: {
-                        brand: '#2B6CB0',
+                        ...customizeBrandColors,
                       },
                     },
                   },

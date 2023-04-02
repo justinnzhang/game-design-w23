@@ -102,7 +102,7 @@ export default function GamePage() {
 
   if (isLoading) {
     return (
-      <Box bgGradient='linear(to-t, blue.50, blue.100)' h='$100vh' w='100vw'>
+      <Box bgGradient='linear(to-t, brand.50, brand.100)' h='$100vh' w='100vw'>
         <Center h='100%'>
           <Stack alignItems='center' spacing={4}>
             <Text fontWeight='bold' fontSize='xl'>
@@ -117,7 +117,7 @@ export default function GamePage() {
 
   if (!savedData) {
     return (
-      <Box bgGradient='linear(to-t, blue.50, blue.100)' h='$100vh' w='100vw'>
+      <Box bgGradient='linear(to-t, brand.50, brand.100)' h='$100vh' w='100vw'>
         <Center h='100%'>
           <Stack alignItems='center' spacing={4}>
             <Text fontWeight='bold' fontSize='xl'>

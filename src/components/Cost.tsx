@@ -39,10 +39,10 @@ export const Cost = ({ item, handlePurchase }: Props) => {
   }
 
   return (
-    <Flex p={4} bg={isPurchased ? 'blue.500' : 'blue.800'} borderRadius={8}>
+    <Flex p={4} bg={isPurchased ? 'brand.500' : 'brand.800'} borderRadius={8}>
       <Stack spacing={1}>
         <Text color='white'>{name}</Text>
-        <Text color='blue.200'>
+        <Text color='brand.200'>
           Cost:{' '}
           {Intl.NumberFormat('en-US', {
             style: 'currency',
