@@ -14,13 +14,16 @@ import {
   Image,
   Divider,
   Center,
+  IconButton,
   Link as ChakraLink,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 
-import { IoArrowForward, IoLink } from 'react-icons/io5';
+import { IoArrowForward, IoLink, IoLogoGithub } from 'react-icons/io5';
 
 import { CONTRIBUTORS_LIST, TECH_STACK_LIST } from '../constants';
+
+const GITHUB_REPO_URL = 'https://github.com/justinnzhang/game-design-w23';
 
 export default function IndexPage() {
   return (
@@ -36,38 +39,50 @@ export default function IndexPage() {
       </Head>
       <Box
         w='100vw'
-        h='100vh'
-        bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, blue.100 50%)'
+        minH='100vh'
+        h='fit-content'
+        bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, brand.100 50%)'
+        overflow='hidden'
       >
         <Container
           maxW='container.lg'
-          h='$100vh'
           p={0}
           bg='white'
           position='relative'
-          overflowY='scroll'
+          boxShadow='lg'
         >
           <Box
             p={4}
-            bg='blue.100'
+            bg='brand.100'
             as={Flex}
             alignItems='center'
             id='heading'
             position='-webkit-sticky'
           >
-            <Text fontWeight='medium' fontSize='sm' color='blue.800'>
+            <Text fontWeight='medium' fontSize='lg' color='brand.800'>
               Coffee.io
             </Text>
             <Spacer />
-            <Button as={Link} href='/home' colorScheme='blue' size='sm'>
-              Play
-            </Button>
+            <Stack spacing={4} direction='row'>
+              <IconButton
+                size='md'
+                icon={<IoLogoGithub />}
+                variant='ghost'
+                href={GITHUB_REPO_URL}
+                colorScheme='brand'
+                as={ChakraLink}
+                aria-label='GitHub Repo'
+              />
+              <Button as={Link} href='/home' colorScheme='brand' size='md'>
+                Play Now
+              </Button>
+            </Stack>
           </Box>
           <Stack>
             <Flex p={8} alignItems='center'>
               <Heading
                 size='2xl'
-                bgGradient='linear(to-br, blue.100, blue.400, blue.500)'
+                bgGradient='linear(to-br, brand.100, brand.400, brand.500)'
                 bgClip='text'
               >
                 Coffee.io
@@ -92,8 +107,10 @@ export default function IndexPage() {
                   as={Link}
                   href='/home'
                   w='fit-content'
-                  colorScheme='blue'
+                  colorScheme='brand'
                   rightIcon={<IoArrowForward />}
+                  size='sm'
+                  variant='ghost'
                 >
                   Play Now
                 </Button>
@@ -127,8 +144,10 @@ export default function IndexPage() {
                   as={Link}
                   href='/home'
                   w='fit-content'
-                  colorScheme='blue'
+                  colorScheme='brand'
                   rightIcon={<IoArrowForward />}
+                  size='sm'
+                  variant='ghost'
                 >
                   Play Now
                 </Button>
@@ -145,7 +164,7 @@ export default function IndexPage() {
               color='gray.500'
             >
               <Stack spacing={2} as={GridItem} colSpan={4}>
-                <Text fontWeight='bold' fontSize='lg' color='blue.500'>
+                <Text fontWeight='bold' fontSize='lg' color='brand.500'>
                   The Team
                 </Text>
                 {CONTRIBUTORS_LIST.map((contributor) => (
@@ -153,7 +172,7 @@ export default function IndexPage() {
                 ))}
               </Stack>
               <Stack as={GridItem} colSpan={8}>
-                <Text fontWeight='bold' fontSize='lg' color='blue.500'>
+                <Text fontWeight='bold' fontSize='lg' color='brand.500'>
                   Tech Stack
                 </Text>
                 {TECH_STACK_LIST.map((tech, index) => (
@@ -161,7 +180,7 @@ export default function IndexPage() {
                     key={index}
                     direction='row'
                     alignItems='center'
-                    bg='blue.50'
+                    bg='brand.50'
                     borderRadius='xl'
                     p={4}
                     spacing={4}
@@ -174,7 +193,7 @@ export default function IndexPage() {
                         direction='row'
                         alignItems='center'
                         fontWeight='medium'
-                        color='blue.400'
+                        color='brand.400'
                       >
                         <ChakraLink href={tech.link} isExternal>
                           {tech.name}
@@ -188,7 +207,7 @@ export default function IndexPage() {
               </Stack>
             </Grid>
           </Stack>
-          <Box p={8} bg='blue.50' w='100%'>
+          <Box p={8} bg='brand.50' w='100%'>
             <Text color='purple.500' fontWeight='medium'>
               Made with ❤️ at Western University
             </Text>

@@ -8,7 +8,6 @@ import {
   Grid,
   GridItem,
   Badge,
-  Progress,
   Wrap,
   useToast,
   Tabs,
@@ -20,16 +19,15 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 
 import { Upgrade, UpgradeProps } from './Upgrade';
 import { CheckpointDisplay } from './CheckpointDisplay';
 import { WelcomeModal } from './WelcomeModal';
 import { Cost, CostProps } from './Cost';
+import { HeadingCard } from './HeadingCard';
 
 import { MOCK_CHECKPOINTS_DATA } from '../constants';
 
-import { CARD_STYLE_PROPS } from '@/constants/styling';
 import { parentVariants, childVariants } from '@/animation';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { CheckpointModal } from './CheckpointModal';
@@ -73,7 +71,9 @@ export const Game = ({ savedData }: Props) => {
   const [tickProgress, setTickProgress] = useState(0);
   const [showEarnedAmount, setShowEarnedAmount] = useState<boolean>(false);
 
-  const [checkpointProgress, setCheckpointProgress] = useState(0);
+  const [checkpointProgress, setCheckpointProgress] = useState(
+    savedData.checkpoint
+  );
 
   const [upgradesList, setUpgradesList] = useState(savedData.upgradesList);
   const [costsList, setCostsList] = useState(savedData.costsList);
@@ -331,7 +331,7 @@ export const Game = ({ savedData }: Props) => {
         onClose={onCheckpointModalClose}
         checkpoint={MOCK_CHECKPOINTS_DATA[checkpointProgress - 1]}
       />
-      <Box bgGradient='linear(to-t, blue.50, blue.100)'>
+      <Box bgGradient='linear(to-t, brand.50, brand.100)'>
         <Container maxW='container.xl' position='relative'>
           <Grid
             templateColumns='repeat(12, 1fr)'
@@ -350,63 +350,17 @@ export const Game = ({ savedData }: Props) => {
                 }}
                 overflow='auto'
               >
-                <Stack {...CARD_STYLE_PROPS}>
-                  <Heading color='blue.200'>Coffee.io</Heading>
-                  <Stack direction='row'>
-                    <Button as={Link} href='/home'>
-                      Back Home
-                    </Button>
-                  </Stack>
-                </Stack>
-                <Stack {...CARD_STYLE_PROPS} position='relative'>
-                  <Text fontSize='sm' fontWeight='bold' color='blue.200'>
-                    Earnings
-                  </Text>
-
-                  {balanceIncreaseMarkup}
-                  <Stack spacing={1}>
-                    <Progress
-                      value={tickProgress}
-                      size='xs'
-                      w='100%'
-                      colorScheme='blue'
-                    />
-                    <Stack direction='row' color='gray.200' fontSize='lg'>
-                      <Text fontWeight='bold'>Balance</Text>
-                      <Text>
-                        {Intl.NumberFormat('en-US', {
-                          style: 'currency',
-                          currency: 'USD',
-                        }).format(balance)}
-                      </Text>
-                    </Stack>
-                    <Stack spacing={0}>
-                      <Text color='gray.500'>
-                        Gross Earnings:{' '}
-                        {Intl.NumberFormat('en-US', {
-                          style: 'currency',
-                          currency: 'USD',
-                        }).format(increment)}
-                        /min
-                      </Text>
-                      <Text color='gray.500'>
-                        Costs:{' '}
-                        {Intl.NumberFormat('en-US', {
-                          style: 'percent',
-                          maximumFractionDigits: 2,
-                        }).format(expenses)}
-                      </Text>
-                      <Text color='gray.100'>
-                        Net Earnings:{' '}
-                        {Intl.NumberFormat('en-US', {
-                          style: 'currency',
-                          currency: 'USD',
-                        }).format(increment * (1 - expenses))}
-                        /min
-                      </Text>
-                    </Stack>
-                  </Stack>
-                </Stack>
+                <HeadingCard
+                  tickProgress={tickProgress}
+                  balance={balance}
+                  increment={increment}
+                  expenses={expenses}
+                  showEarnedAmount={showEarnedAmount}
+                  isFasterTick={isFasterTick}
+                  lastSaved={lastSaved}
+                  isSaving={isSaving}
+                  handleSave={handleSave}
+                />
                 <CheckpointDisplay
                   checkpoint={
                     checkpointProgress < MOCK_CHECKPOINTS_DATA.length
@@ -415,30 +369,9 @@ export const Game = ({ savedData }: Props) => {
                   }
                   currentBalance={balance}
                 />
-                <Stack {...CARD_STYLE_PROPS}>
-                  <Text fontSize='sm' fontWeight='bold' color='blue.200'>
-                    Autosaves every minutes
-                  </Text>
-
-                  <Text color='gray.200'>
-                    Last saved:{' '}
-                    {new Intl.DateTimeFormat('en-US', {
-                      timeStyle: 'long',
-                    }).format(lastSaved)}
-                  </Text>
-                  <Button onClick={() => handleSave()} isLoading={isSaving}>
-                    Save Progress
-                  </Button>
-                </Stack>
-                <Stack
-                  px={8}
-                  py={6}
-                  bg='purple.800'
-                  borderRadius={8}
-                  spacing={4}
-                >
+                <Stack p={4} bg='purple.800' borderRadius={8} spacing={4}>
                   <Wrap direction='row' alignContent='center'>
-                    <Text fontSize='sm' fontWeight='bold' color='blue.200'>
+                    <Text fontSize='sm' fontWeight='bold' color='brand.200'>
                       Testing Tools
                     </Text>
 
@@ -459,7 +392,7 @@ export const Game = ({ savedData }: Props) => {
               </Stack>
             </GridItem>
             <GridItem colSpan={[12, null, 8]} py={4} h='100%'>
-              <Tabs isLazy variant='soft-rounded' colorScheme='green'>
+              <Tabs isLazy variant='soft-rounded' colorScheme='yellow'>
                 <TabList>
                   <Tab>Upgrades</Tab>
                   <Tab>Costs</Tab>
@@ -487,7 +420,7 @@ export const Game = ({ savedData }: Props) => {
                         <motion.div>
                           <Box
                             borderRadius={8}
-                            bg='blue.800'
+                            bg='brand.800'
                             color='white'
                             p={4}
                           >

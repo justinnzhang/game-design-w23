@@ -128,7 +128,7 @@ export default function HomePage() {
       <Box
         w='100vw'
         h='100vh'
-        bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, blue.100 50%)'
+        bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, brand.100 50%)'
       >
         <Container maxW='container.sm' h='$100vh'>
           <Center h='100%'>
@@ -227,7 +227,7 @@ export default function HomePage() {
         <Box
           w='100vw'
           h='100vh'
-          bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, blue.100 50%)'
+          bgGradient='linear(to-br, yellow.50 0%, purple.100 25%, brand.100 50%)'
         >
           <Container maxW='container.sm' h='$100vh'>
             <Center h='100%'>
@@ -240,7 +240,7 @@ export default function HomePage() {
                 borderWidth='1px'
                 spacing={8}
               >
-                <Heading size='xl' color='blue.500'>
+                <Heading size='xl' color='brand.500'>
                   Coffee.io
                 </Heading>
                 {savedProgressMarkup}

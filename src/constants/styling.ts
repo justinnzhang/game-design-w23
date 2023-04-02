@@ -1,7 +1,6 @@
 export const CARD_STYLE_PROPS = {
-  bg: 'blue.900',
-  py: 6,
-  px: 8,
+  bg: 'brand.900',
+  p: 4,
   borderRadius: 8,
   spacing: 4,
 };
