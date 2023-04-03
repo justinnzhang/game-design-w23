@@ -35,6 +35,7 @@ import { MOCK_CHECKPOINTS_DATA } from '../constants';
 
 import { childVariants, parentVariants } from '@/animation';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import useSound from 'use-sound';
 
 export interface HandlePurchaseOfUpgradeProps {
   costOfUpgrade: number;
@@ -76,6 +77,10 @@ const EARNING_CHECKPOINT_MAXMIUM = 5;
 
 export const Game = ({ savedData }: Props) => {
   const supabase = useSupabaseClient();
+
+  // sounds
+  const [playCashRegisterSound] = useSound('/static/sounds/register.mp3');
+  const [playErrorSound] = useSound('/static/sounds/error.wav');
 
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date>(new Date());
@@ -239,6 +244,7 @@ export const Game = ({ savedData }: Props) => {
     itemId,
   }: HandlePurchaseOfUpgradeProps): boolean => {
     if (costOfUpgrade > balance) {
+      playErrorSound();
       toast({
         title: 'Insufficient Funds',
         description: "You don't have enough money",
@@ -275,7 +281,7 @@ export const Game = ({ savedData }: Props) => {
       isClosable: true,
       position: 'bottom-right',
     });
-
+    playCashRegisterSound();
     return true;
   };
 
@@ -285,6 +291,7 @@ export const Game = ({ savedData }: Props) => {
     itemId,
   }: HandlePurchaseOfCostProps): boolean => {
     if (costOfUpgrade > balance) {
+      playErrorSound();
       toast({
         title: 'Insufficient Funds',
         description: "You don't have enough money",
@@ -315,6 +322,7 @@ export const Game = ({ savedData }: Props) => {
     if (itemId >= 6 && checkpointProgress < 7) {
       setCheckpointProgress((prevCheckpoint) => prevCheckpoint + 1);
     }
+    playCashRegisterSound();
 
     return true;
   };
@@ -326,6 +334,7 @@ export const Game = ({ savedData }: Props) => {
     duration,
   }: HandlePurchaseOfBoostProps): boolean => {
     if (costOfUpgrade > balance) {
+      playErrorSound();
       toast({
         title: 'Insufficient Funds',
         description: "You don't have enough money",
@@ -357,6 +366,7 @@ export const Game = ({ savedData }: Props) => {
     setTimeout(() => {
       setBoostMultiplier(1);
     }, 1000 * duration);
+    playCashRegisterSound();
 
     return true;
   };
