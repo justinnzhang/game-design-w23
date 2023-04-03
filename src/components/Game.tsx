@@ -23,13 +23,14 @@ import {
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
+import { Boost, BoostProps } from './Boost';
 import { CheckpointDisplay } from './CheckpointDisplay';
+import { CheckpointModal } from './CheckpointModal';
 import { Cost, CostProps } from './Cost';
 import { HeadingCard } from './HeadingCard';
 import { Upgrade, UpgradeProps } from './Upgrade';
 import { WelcomeModal } from './WelcomeModal';
-import { CheckpointModal } from './CheckpointModal';
-import { Boost, BoostProps } from './Boost';
+import { FinalCutscene } from './FinalCutscene';
 
 import { MOCK_CHECKPOINTS_DATA } from '../constants';
 
@@ -102,6 +103,8 @@ export const Game = ({ savedData }: Props) => {
   const [boostMultiplier, setBoostMultiplier] = useState(1);
   const [boostDuration, setBoostDuration] = useState(0);
 
+  const [gameIsComplete, setGameIsComplete] = useState(false);
+
   const {
     isOpen: isCheckpointModalOpen,
     onClose: onCheckpointModalClose,
@@ -116,6 +119,8 @@ export const Game = ({ savedData }: Props) => {
    * Game tick handler
    */
   useEffect(() => {
+    if (gameIsComplete) return;
+
     const progressInterval = setInterval(() => {
       setTickProgress((prev) => {
         if (prev < 100) {
@@ -136,6 +141,8 @@ export const Game = ({ savedData }: Props) => {
 
   // Show how much money was added to the balance
   useEffect(() => {
+    if (gameIsComplete) return;
+
     let timeoutId: number | null = null;
 
     if (showEarnedAmount) {
@@ -156,6 +163,7 @@ export const Game = ({ savedData }: Props) => {
   }, [showEarnedAmount]);
 
   useEffect(() => {
+    if (gameIsComplete) return;
     const autoSaveInterval = setInterval(() => handleSave(true), 60000);
 
     return () => clearInterval(autoSaveInterval);
@@ -319,9 +327,13 @@ export const Game = ({ savedData }: Props) => {
       return newState;
     });
 
-    if (itemId >= 6 && checkpointProgress < 7) {
+    if (itemId === 6 && checkpointProgress < 7) {
+      setCheckpointProgress(6);
+    }
+    if (itemId === 7 && checkpointProgress < 7) {
       setCheckpointProgress((prevCheckpoint) => prevCheckpoint + 1);
     }
+
     playCashRegisterSound();
 
     return true;
@@ -370,6 +382,10 @@ export const Game = ({ savedData }: Props) => {
 
     return true;
   };
+
+  if (gameIsComplete) {
+    return <FinalCutscene />;
+  }
 
   return (
     <>
@@ -545,6 +561,7 @@ export const Game = ({ savedData }: Props) => {
                               <Cost
                                 item={cost}
                                 handlePurchase={handlePurchaseOfCost}
+                                setGameIsComplete={setGameIsComplete}
                               />
                             </motion.div>
                           );

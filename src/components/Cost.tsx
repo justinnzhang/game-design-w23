@@ -32,6 +32,7 @@ interface Props {
     decreaseInCosts,
     itemId,
   }: HandlePurchaseOfCostProps) => boolean;
+  setGameIsComplete: (value: boolean) => void;
 }
 
 const STORY_TRIGGERS: { [key: number]: any } = {
@@ -76,7 +77,7 @@ const STORY_TRIGGERS: { [key: number]: any } = {
   },
 };
 
-export const Cost = ({ item, handlePurchase }: Props) => {
+export const Cost = ({ item, handlePurchase, setGameIsComplete }: Props) => {
   const { id, name, description, costOfUpgrade, purchased } = item;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -100,6 +101,14 @@ export const Cost = ({ item, handlePurchase }: Props) => {
     setIsPurchased(true);
   }
 
+  function handleContinue() {
+    if (id === 7) {
+      setGameIsComplete(true);
+    }
+
+    onClose();
+  }
+
   const storyModalMarkup = (
     <Modal isOpen={isOpen} onClose={onClose} size='lg'>
       <ModalOverlay />
@@ -108,7 +117,7 @@ export const Cost = ({ item, handlePurchase }: Props) => {
         <ModalCloseButton />
         <ModalBody>{STORY_TRIGGERS[id]?.body}</ModalBody>
         <ModalFooter>
-          <Button colorScheme='green' onClick={onClose}>
+          <Button colorScheme='green' onClick={handleContinue}>
             Continue
           </Button>
         </ModalFooter>
