@@ -82,7 +82,7 @@ export const CheckpointModal = ({ isOpen, onClose, checkpoint }: Props) => {
           <span id='confettiReward' />
           <span id='balloonsReward' />
           <span id='emojiReward' />
-          <Button colorScheme='green' mr={3} onClick={onClose}>
+          <Button colorScheme='brand' mr={3} onClick={onClose}>
             Continue brewing
           </Button>
         </ModalFooter>

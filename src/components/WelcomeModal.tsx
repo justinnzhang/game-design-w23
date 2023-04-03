@@ -42,7 +42,7 @@ export const WelcomeModal = ({ isSavedGame }: Props) => {
           </Stack>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme='green' mr={3} onClick={onClose}>
+          <Button colorScheme='brand' mr={3} onClick={onClose}>
             Get started!
           </Button>
         </ModalFooter>
