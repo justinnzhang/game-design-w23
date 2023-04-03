@@ -167,6 +167,7 @@ export const Game = ({ savedData }: Props) => {
       checkpoint: checkpointProgress,
       saved_upgrade_counts: fetchUpgradesForDB(),
       saved_costs_data: fetchCostsForDB(),
+      saved_boosts_data: fetchBoostsForDB(),
     };
 
     const { error } = await supabase
