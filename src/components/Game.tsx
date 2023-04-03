@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertIcon,
   Badge,
   Box,
   Button,
@@ -13,6 +15,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  Tooltip,
   useDisclosure,
   useToast,
   Wrap,
@@ -25,12 +28,13 @@ import { Cost, CostProps } from './Cost';
 import { HeadingCard } from './HeadingCard';
 import { Upgrade, UpgradeProps } from './Upgrade';
 import { WelcomeModal } from './WelcomeModal';
+import { CheckpointModal } from './CheckpointModal';
+import { Boost, BoostProps } from './Boost';
 
 import { MOCK_CHECKPOINTS_DATA } from '../constants';
 
 import { childVariants, parentVariants } from '@/animation';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { CheckpointModal } from './CheckpointModal';
 
 export interface HandlePurchaseOfUpgradeProps {
   costOfUpgrade: number;
@@ -45,6 +49,13 @@ export interface HandlePurchaseOfCostProps {
   itemId: number;
 }
 
+export interface HandlePurchaseOfBoostProps {
+  costOfUpgrade: number;
+  multiplier: number;
+  duration: number;
+  itemId: number;
+}
+
 export interface SavedDataProps {
   balance: number;
   increment: number;
@@ -52,6 +63,7 @@ export interface SavedDataProps {
   checkpoint: number;
   upgradesList: UpgradeProps[];
   costsList: CostProps[];
+  boostsList: BoostProps[];
   id: number;
   isSavedGame: boolean;
 }
@@ -80,6 +92,10 @@ export const Game = ({ savedData }: Props) => {
 
   const [upgradesList, setUpgradesList] = useState(savedData.upgradesList);
   const [costsList, setCostsList] = useState(savedData.costsList);
+  const [boostsList, setBoostsList] = useState(savedData.boostsList);
+
+  const [boostMultiplier, setBoostMultiplier] = useState(1);
+  const [boostDuration, setBoostDuration] = useState(0);
 
   const {
     isOpen: isCheckpointModalOpen,
@@ -98,7 +114,7 @@ export const Game = ({ savedData }: Props) => {
     const progressInterval = setInterval(() => {
       setTickProgress((prev) => {
         if (prev < 100) {
-          const multiplier = isFasterTick ? 10 : 1;
+          const multiplier = isFasterTick ? 10 : boostMultiplier;
 
           return prev + 1 * multiplier;
         } else {
@@ -190,6 +206,10 @@ export const Game = ({ savedData }: Props) => {
 
   function fetchCostsForDB() {
     return costsList.map((cost) => cost.purchased);
+  }
+
+  function fetchBoostsForDB() {
+    return boostsList.map((boost) => boost.purchased);
   }
 
   function handleTick() {
@@ -298,6 +318,48 @@ export const Game = ({ savedData }: Props) => {
     return true;
   };
 
+  const handlePurchaseOfBoost = ({
+    costOfUpgrade,
+    multiplier,
+    itemId,
+    duration,
+  }: HandlePurchaseOfBoostProps): boolean => {
+    if (costOfUpgrade > balance) {
+      toast({
+        title: 'Insufficient Funds',
+        description: "You don't have enough money",
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+      return false;
+    }
+
+    const nextBalance = balance - costOfUpgrade;
+    setBalance(nextBalance);
+
+    setBoostMultiplier(multiplier);
+    setBoostDuration(duration);
+
+    setBoostsList((prev) => {
+      const newState = [...prev];
+
+      newState[itemId - 1] = {
+        ...newState[itemId - 1],
+        purchased: true,
+      };
+
+      return newState;
+    });
+
+    setTimeout(() => {
+      setBoostMultiplier(1);
+    }, 1000 * duration);
+
+    return true;
+  };
+
   return (
     <>
       <WelcomeModal isSavedGame={savedData.isSavedGame} />
@@ -354,15 +416,20 @@ export const Game = ({ savedData }: Props) => {
                       Testing
                     </Badge>
                   </Wrap>
-                  <Button
-                    onClick={() => {
-                      setIsFasterTick((prev) => !prev);
-                    }}
+                  <Tooltip
+                    hasArrow
+                    label='Overrides any active boosts you have set'
                   >
-                    {isFasterTick
-                      ? '🐌 Regular Earning Speed'
-                      : '⚡️ 10x Earning Speed'}
-                  </Button>
+                    <Button
+                      onClick={() => {
+                        setIsFasterTick((prev) => !prev);
+                      }}
+                    >
+                      {isFasterTick
+                        ? '🐌 Regular Earning Speed'
+                        : '⚡️ 10x Earning Speed'}
+                    </Button>
+                  </Tooltip>
                   <Button
                     onClick={() => {
                       setBalance((prev) => prev + 1000);
@@ -388,11 +455,25 @@ export const Game = ({ savedData }: Props) => {
               </Stack>
             </GridItem>
             <GridItem colSpan={[12, null, 8]} py={4} h='100%'>
+              {boostMultiplier > 1 && (
+                <Alert
+                  my={2}
+                  borderRadius={8}
+                  backgroundColor='brand.600'
+                  color='white'
+                >
+                  <AlertIcon color='white' />
+                  Earnings are boosted by {boostMultiplier}x for {boostDuration}{' '}
+                  seconds
+                </Alert>
+              )}
               <Tabs isLazy variant='soft-rounded' colorScheme='yellow'>
                 <TabList>
                   <Tab>Upgrades</Tab>
                   <Tab>Costs</Tab>
+                  <Tab>Boosts</Tab>
                 </TabList>
+                {/* Upgrades */}
                 <TabPanels>
                   <TabPanel>
                     <motion.div
@@ -430,6 +511,7 @@ export const Game = ({ savedData }: Props) => {
                       </Stack>
                     </motion.div>
                   </TabPanel>
+                  {/* Costs */}
                   <TabPanel>
                     <motion.div
                       variants={parentVariants}
@@ -452,6 +534,39 @@ export const Game = ({ savedData }: Props) => {
                               <Cost
                                 item={cost}
                                 handlePurchase={handlePurchaseOfCost}
+                              />
+                            </motion.div>
+                          );
+                        })}
+                      </Stack>
+                    </motion.div>
+                  </TabPanel>
+                  {/* Boosts */}
+                  <TabPanel>
+                    <motion.div
+                      variants={parentVariants}
+                      initial='initial'
+                      animate='animate'
+                    >
+                      <Stack>
+                        <Heading>Boosts</Heading>
+                        <Text color='gray.800'>
+                          Create hype, manufacture your own luck and gain
+                          temproary huge sales multipliers. <br /> Note: these
+                          are single use.{' '}
+                        </Text>
+                        {boostsList.map((boost, index) => {
+                          if (index === 6 && checkpointProgress < 6)
+                            return null;
+                          return (
+                            <motion.div
+                              key={`boosts-${boost.id}`}
+                              variants={childVariants}
+                            >
+                              <Boost
+                                item={boost}
+                                handlePurchase={handlePurchaseOfBoost}
+                                forceDisabled={boostMultiplier > 1}
                               />
                             </motion.div>
                           );

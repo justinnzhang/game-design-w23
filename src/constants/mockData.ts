@@ -1,6 +1,7 @@
 import { UpgradeProps } from '../components/Upgrade';
 import { CheckpointProps } from '../components/CheckpointDisplay';
 import { CostProps } from '../components/Cost';
+import { BoostProps } from '@/components/Boost';
 
 export const MOCK_UPGRADE_LIST_DATA: UpgradeProps[] = [
   {
@@ -247,6 +248,80 @@ export const MOCK_COST_DATA: CostProps[] = [
     description: 'Replace yourself with artificial intelligence',
     costOfUpgrade: 100000000,
     purchased: false,
+  },
+];
+
+export const MOCK_BOOST_DATA: BoostProps[] = [
+  {
+    id: 1,
+    name: 'Run an advertisement on the radio',
+    purchased: false,
+    cost: 250,
+    description:
+      'Run an advertisement on the radio, after all the only people who drink coffee are old, and old people listen to the radio.',
+    multiplier: 2,
+    duration: 30,
+  },
+  {
+    id: 2,
+    name: 'Run an advertisement at the superbowl',
+    purchased: false,
+    cost: 3000000,
+    description:
+      "Run an advertisement at the superbowl, the world's most expensive advertisement spot. You will be sure to get a lot of customers. Hopefully they're repeat customers cause this is expenseive.",
+    multiplier: 125,
+    duration: 60,
+  },
+  {
+    id: 3,
+    name: 'Get a Robert Downey Jr. endorsement',
+    purchased: false,
+    cost: 50000,
+    description:
+      'Get a Robert Downey Jr. endorsement, afterall he is Iron Man so if Iron Man drinks your coffee, everyone will drink your coffee. Right?',
+    multiplier: 5,
+    duration: 45,
+  },
+  {
+    id: 4,
+    name: 'Create a fake rumor that drinking coffee makes you fly',
+    purchased: false,
+    cost: 5000,
+    description:
+      'Create a fake rumor that drinking coffee makes you fly. People will flock to your coffee shop hoping to take flight. Disclaimer: We do not recommend jumping off a building after drinking coffee.',
+    multiplier: 6,
+    duration: 30,
+  },
+  {
+    id: 5,
+    name: 'Offer a coffee that tastes like bacon',
+    purchased: false,
+    cost: 2000,
+    description:
+      'Offer a coffee that tastes like bacon. Who needs breakfast when you can have a coffee that tastes like breakfast?',
+    multiplier: 2.5,
+    duration: 15,
+  },
+  {
+    id: 6,
+    name: 'Partner with the Tooth Fairy to promote your coffee',
+    purchased: false,
+    cost: 5000000,
+    description:
+      'Partner with the Tooth Fairy to promote your coffee. She may be small, but she has a big influence over children. With her help, your coffee will become the new bedtime drink of choice.',
+    multiplier: 100,
+    duration: 120,
+  },
+  {
+    id: 7,
+
+    name: 'Train monkeys to make coffee for you',
+    purchased: false,
+    cost: 100000,
+    description:
+      'Train monkeys to make coffee for you. They may not be the best baristas, but they are sure to draw a crowd. Disclaimer: Please do not let the monkeys handle hot liquids.',
+    multiplier: 25,
+    duration: 60,
   },
 ];
 

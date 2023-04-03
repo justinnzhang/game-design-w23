@@ -14,7 +14,11 @@ import { ScreenTooSmall, Game, AuthWrapper } from '../components';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import { SavedDataProps } from '../components/Game';
 
-import { MOCK_UPGRADE_LIST_DATA, MOCK_COST_DATA } from '../constants';
+import {
+  MOCK_UPGRADE_LIST_DATA,
+  MOCK_COST_DATA,
+  MOCK_BOOST_DATA,
+} from '../constants';
 import Link from 'next/link';
 
 export default function GamePage() {
@@ -55,6 +59,7 @@ export default function GamePage() {
       expenses: typedSaveData?.expenses || 0,
       upgradesList: formatUpgradeData(typedSaveData?.saved_upgrade_counts),
       costsList: formatCostsData(typedSaveData?.saved_costs_data),
+      boostsList: formatBoostsData(typedSaveData?.saved_boosts_data),
       id: typedSaveData?.id,
       isSavedGame: !!typedSaveData?.saved_upgrade_counts,
     };
@@ -85,6 +90,18 @@ export default function GamePage() {
     });
 
     return formattedCostsData;
+  }
+
+  function formatBoostsData(savedBoostsData: boolean[] | null) {
+    if (!savedBoostsData) return MOCK_BOOST_DATA;
+
+    const formattedBoostData = [...MOCK_BOOST_DATA];
+
+    formattedBoostData.forEach((boost, index) => {
+      return (boost.purchased = savedBoostsData![index]);
+    });
+
+    return formattedBoostData;
   }
 
   const isMobile = useBreakpointValue({
