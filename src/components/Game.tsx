@@ -514,7 +514,7 @@ export const Game = ({ savedData }: Props) => {
                           Increase the range of coffees you can sell to earn
                           more!
                         </Text>
-                        {upgradesList.map((upgrade, index) => (
+                        {upgradesList.map((upgrade) => (
                           <motion.div
                             key={`upgrades-${upgrade.id}`}
                             variants={childVariants}
